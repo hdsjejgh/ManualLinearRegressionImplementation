@@ -5,8 +5,9 @@ x = []
 y = []
 
 BATCH_SIZE = 500
+DECAY_RATE = 0.01 if BATCH_SIZE == 1 else 0
 LEARNING_RATE = 0.00000001
-EPOCHS = 50
+EPOCHS = 500
 
 def load_data(path: str):
     with open(path,"r") as file:
@@ -37,9 +38,11 @@ def minibatch(size: int, max: int) -> set[int]:
 for ii in range(EPOCHS):
     batch = minibatch(BATCH_SIZE, len(x))
     batch = tuple(batch)
-    a=LEARNING_RATE
+    theta2=theta.copy()
+    a=LEARNING_RATE/(1+DECAY_RATE*ii)
     for idx, value in enumerate(theta):
-        theta[idx] -= a * sum([  (hypothesis(x[i],theta)-y[i]) * x[i][idx] for i in batch  ])/len(batch)
+        theta2[idx] -= a * sum([  (hypothesis(x[i],theta)-y[i]) * x[i][idx] for i in batch  ])/len(batch)
+    theta = theta2
 
 
 
